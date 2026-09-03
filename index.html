@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JISD Links! :)</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: Inter, Arial, sans-serif;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      overflow-x: hidden;
+
+      background:
+        radial-gradient(circle at 20% 10%, rgba(210, 120, 255, .28), transparent 30%),
+        radial-gradient(circle at 85% 85%, rgba(110, 30, 220, .35), transparent 35%),
+        linear-gradient(135deg, #160024, #3b0870 50%, #17002b);
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background: linear-gradient(
+        120deg,
+        transparent 0%,
+        rgba(255,255,255,.04) 45%,
+        rgba(255,255,255,.09) 50%,
+        rgba(255,255,255,.04) 55%,
+        transparent 100%
+      );
+      animation: shine 8s linear infinite;
+    }
+
+    @keyframes shine {
+      from { transform: translateX(-100%); }
+      to   { transform: translateX(100%); }
+    }
+
+    .container {
+      width: min(650px, 100%);
+      padding: 34px;
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 30px;
+
+      background: rgba(38, 5, 70, .62);
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
+
+      box-shadow:
+        0 30px 80px rgba(0,0,0,.45),
+        inset 0 1px 1px rgba(255,255,255,.25),
+        inset 0 -1px 1px rgba(0,0,0,.3);
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .logo {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 18px;
+      border-radius: 34px;
+      background:
+        linear-gradient(145deg, #e7b8ff, #a832ff 45%, #6410c9);
+
+      box-shadow:
+        0 12px 35px rgba(168, 50, 255, .45),
+        inset 0 2px 4px rgba(255,255,255,.65),
+        inset 0 -4px 8px rgba(45,0,90,.4);
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 34px;
+      font-weight: 900;
+    }
+
+    h1 {
+      font-size: clamp(30px, 7vw, 46px);
+      letter-spacing: -1.5px;
+      text-shadow: 0 5px 25px rgba(190,80,255,.4);
+    }
+
+    .subtitle {
+      margin-top: 8px;
+      color: rgba(255,255,255,.62);
+      font-size: 14px;
+    }
+
+    .buttons {
+      display: grid;
+      gap: 13px;
+    }
+
+    .link-button {
+      position: relative;
+      overflow: hidden;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      width: 100%;
+      min-height: 62px;
+      padding: 0 21px;
+
+      color: white;
+      text-decoration: none;
+      font-size: 16px;
+      font-weight: 700;
+      letter-spacing: .2px;
+
+      border: 1px solid rgba(255,255,255,.18);
+      border-radius: 17px;
+
+      background:
+        linear-gradient(
+          135deg,
+          rgba(255,255,255,.18),
+          rgba(160,50,255,.20) 45%,
+          rgba(65,0,120,.38)
+        );
+
+      box-shadow:
+        0 9px 22px rgba(0,0,0,.25),
+        inset 0 1px 1px rgba(255,255,255,.28),
+        inset 0 -2px 5px rgba(20,0,45,.3);
+
+      transition:
+        transform .2s ease,
+        box-shadow .2s ease,
+        border-color .2s ease;
+    }
+
+    /* Glossy highlight */
+    .link-button::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -120%;
+      width: 80%;
+      height: 100%;
+
+      background: linear-gradient(
+        105deg,
+        transparent,
+        rgba(255,255,255,.22),
+        transparent
+      );
+
+      transform: skewX(-20deg);
+      transition: left .55s ease;
+    }
+
+    .link-button:hover::before {
+      left: 140%;
+    }
+
+    .link-button:hover {
+      transform: translateY(-3px) scale(1.01);
+
+      border-color: rgba(220,160,255,.55);
+
+      box-shadow:
+        0 15px 35px rgba(100,20,180,.35),
+        0 0 25px rgba(180,70,255,.16),
+        inset 0 1px 2px rgba(255,255,255,.35);
+    }
+
+    .link-button:active {
+      transform: translateY(0) scale(.985);
+    }
+
+    .name {
+      position: relative;
+      z-index: 1;
+    }
+
+    .arrow {
+      position: relative;
+      z-index: 1;
+
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border-radius: 10px;
+      color: #e7b8ff;
+      background: rgba(255,255,255,.09);
+      box-shadow: inset 0 1px 2px rgba(255,255,255,.18);
+
+      transition: transform .2s ease;
+    }
+
+    .link-button:hover .arrow {
+      transform: translateX(4px);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 24px;
+      color: rgba(255,255,255,.35);
+      font-size: 12px;
+    }
+
+    @media (max-width: 500px) {
+      .container {
+        padding: 24px 17px;
+        border-radius: 24px;
+      }
+
+      .link-button {
+        min-height: 58px;
+        padding: 0 16px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <main class="container">
+
+    <header>
+      <div class="logo"><img src="data:image/png;base64,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" alt="" /></div>
+      <h1>JISD Links</h1>
+      <p class="subtitle">Click any link.</p>
+    </header>
+
+    <div class="buttons">
+
+      <a class="link-button" href="https://reading13.cnstefancelmare.ro/" target="_blank" rel="noopener noreferrer">
+        <span class="name">PeteZah</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://maxverstappen1.elitemx.org/" target="_blank" rel="noopener noreferrer">
+        <span class="name">Velara</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://2027games.s3.amazonaws.com/index.html" target="_blank" rel="noopener noreferrer">
+        <span class="name">Fern</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://axnetwork.tauri.com.mx/" target="_blank" rel="noopener noreferrer">
+        <span class="name">Axiom</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://schools.putnam.city/" target="_blank" rel="noopener noreferrer">
+        <span class="name">Korona</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://veterans4education.org/" target="_blank" rel="noopener noreferrer">
+        <span class="name">Monoxide</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://scope.worldmicroscope.com/" target="_blank" rel="noopener noreferrer">
+        <span class="name">Tung Tung Proxy :D</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://quantil.jsdelivr.net/gh/cherriunblocked/svg@main/index.svg" target="_blank" rel="noopener noreferrer">
+        <span class="name">Cherri</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://storage.googleapis.com/zaka13fr/p2p.svg" target="_blank" rel="noopener noreferrer">
+        <span class="name">P2P</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://esm.sh/gh/Mtreasur0133-bit/autorepo1@c595d652781ed7a94b6d09db82bbfc00e63a7382/NeoOS.html" target="_blank" rel="noopener noreferrer">
+        <span class="name">NeoOS</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://s3.amazonaws.com/cleverlearning/index.html" target="_blank" rel="noopener noreferrer">
+        <span class="name">Opium (This has soundboards btw)</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="http://myart.aasee.se/" target="_blank" rel="noopener noreferrer">
+        <span class="name">XCloud</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://techsupport.gisdtips.yhge.co.uk/" target="_blank" rel="noopener noreferrer">
+        <span class="name">FINALLY, FROGGIES ARCADE!!</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://techsupport.gisdtips.yhge.co.uk/stuff/selfhosted/minecraft/1122/wasm.html" target="_blank" rel="noopener noreferrer">
+        <span class="name">Minecraft! (with mc servers)</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://techsupport.gisdtips.yhge.co.uk/algebra.html?url=https://nowgg.fun/apps/a/19900/b.html" target="_blank" rel="noopener noreferrer">
+        <span class="name">Roblox (idk if this acutally works)</span>
+        <span class="arrow">→</span>
+      </a>
+
+      <a class="link-button" href="https://techsupport.gisdtips.yhge.co.uk/stuff/selfhosted/terraria/index.html" target="_blank" rel="noopener noreferrer">
+        <span class="name">Terraria</span>
+        <span class="arrow">→</span>
+      </a>
+
+    </div>
+
+    <footer>
+      For students, by students :D
+    </footer>
+
+  </main>
+
+</body>
+</html>
