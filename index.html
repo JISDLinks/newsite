@@ -23,46 +23,50 @@
       overflow-x: hidden;
 
       background:
-        radial-gradient(circle at 20% 10%, rgba(210, 120, 255, .28), transparent 30%),
-        radial-gradient(circle at 85% 85%, rgba(110, 30, 220, .35), transparent 35%),
+        radial-gradient(circle at 20% 10%, rgba(210, 120, 255, .22), transparent 30%),
+        radial-gradient(circle at 85% 85%, rgba(110, 30, 220, .28), transparent 35%),
         linear-gradient(135deg, #160024, #3b0870 50%, #17002b);
     }
 
     body::before {
       content: "";
       position: fixed;
-      inset: 0;
+      top: 0;
+      left: -100%;
+      width: 50%;
+      height: 100%;
       pointer-events: none;
       background: linear-gradient(
-        120deg,
-        transparent 0%,
-        rgba(255,255,255,.04) 45%,
-        rgba(255,255,255,.09) 50%,
-        rgba(255,255,255,.04) 55%,
-        transparent 100%
+        105deg,
+        transparent,
+        rgba(255, 255, 255, .06),
+        transparent
       );
-      animation: shine 8s linear infinite;
+      transform: skewX(-20deg);
+      animation: shine 10s linear infinite;
+      will-change: transform;
     }
 
     @keyframes shine {
-      from { transform: translateX(-100%); }
-      to   { transform: translateX(100%); }
+      from {
+        transform: translateX(-100%) skewX(-20deg);
+      }
+
+      to {
+        transform: translateX(300%) skewX(-20deg);
+      }
     }
 
     .container {
       width: min(650px, 100%);
       padding: 34px;
-      border: 1px solid rgba(255,255,255,.18);
+      border: 1px solid rgba(255, 255, 255, .15);
       border-radius: 30px;
-
-      background: rgba(38, 5, 70, .62);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
+      background: rgba(38, 5, 70, .90);
 
       box-shadow:
-        0 30px 80px rgba(0,0,0,.45),
-        inset 0 1px 1px rgba(255,255,255,.25),
-        inset 0 -1px 1px rgba(0,0,0,.3);
+        0 20px 50px rgba(0, 0, 0, .35),
+        inset 0 1px 1px rgba(255, 255, 255, .18);
     }
 
     header {
@@ -75,30 +79,34 @@
       height: 80px;
       margin: 0 auto 18px;
       border-radius: 34px;
-      background:
-        linear-gradient(145deg, #e7b8ff, #a832ff 45%, #6410c9);
+
+      background: linear-gradient(
+        145deg,
+        #e7b8ff,
+        #a832ff 45%,
+        #6410c9
+      );
 
       box-shadow:
-        0 12px 35px rgba(168, 50, 255, .45),
-        inset 0 2px 4px rgba(255,255,255,.65),
-        inset 0 -4px 8px rgba(45,0,90,.4);
+        0 10px 25px rgba(168, 50, 255, .35),
+        inset 0 2px 4px rgba(255, 255, 255, .5),
+        inset 0 -4px 8px rgba(45, 0, 90, .3);
 
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 34px;
-      font-weight: 900;
+      overflow: hidden;
     }
 
     h1 {
       font-size: clamp(30px, 7vw, 46px);
       letter-spacing: -1.5px;
-      text-shadow: 0 5px 25px rgba(190,80,255,.4);
+      text-shadow: 0 4px 18px rgba(190, 80, 255, .3);
     }
 
     .subtitle {
       margin-top: 8px;
-      color: rgba(255,255,255,.62);
+      color: rgba(255, 255, 255, .62);
       font-size: 14px;
     }
 
@@ -125,46 +133,43 @@
       font-weight: 700;
       letter-spacing: .2px;
 
-      border: 1px solid rgba(255,255,255,.18);
+      border: 1px solid rgba(255, 255, 255, .15);
       border-radius: 17px;
 
-      background:
-        linear-gradient(
-          135deg,
-          rgba(255,255,255,.18),
-          rgba(160,50,255,.20) 45%,
-          rgba(65,0,120,.38)
-        );
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, .12),
+        rgba(160, 50, 255, .16) 45%,
+        rgba(65, 0, 120, .30)
+      );
 
       box-shadow:
-        0 9px 22px rgba(0,0,0,.25),
-        inset 0 1px 1px rgba(255,255,255,.28),
-        inset 0 -2px 5px rgba(20,0,45,.3);
+        0 6px 16px rgba(0, 0, 0, .22),
+        inset 0 1px 1px rgba(255, 255, 255, .20);
 
       transition:
-        transform .2s ease,
-        box-shadow .2s ease,
-        border-color .2s ease;
+        transform .15s ease,
+        box-shadow .15s ease,
+        border-color .15s ease;
     }
 
-    /* Glossy highlight */
     .link-button::before {
       content: "";
       position: absolute;
       top: 0;
       left: -120%;
-      width: 80%;
+      width: 70%;
       height: 100%;
 
       background: linear-gradient(
         105deg,
         transparent,
-        rgba(255,255,255,.22),
+        rgba(255, 255, 255, .15),
         transparent
       );
 
       transform: skewX(-20deg);
-      transition: left .55s ease;
+      transition: left .45s ease;
     }
 
     .link-button:hover::before {
@@ -172,14 +177,13 @@
     }
 
     .link-button:hover {
-      transform: translateY(-3px) scale(1.01);
+      transform: translateY(-2px);
 
-      border-color: rgba(220,160,255,.55);
+      border-color: rgba(220, 160, 255, .45);
 
       box-shadow:
-        0 15px 35px rgba(100,20,180,.35),
-        0 0 25px rgba(180,70,255,.16),
-        inset 0 1px 2px rgba(255,255,255,.35);
+        0 10px 24px rgba(100, 20, 180, .28),
+        inset 0 1px 2px rgba(255, 255, 255, .25);
     }
 
     .link-button:active {
@@ -197,16 +201,18 @@
 
       width: 32px;
       height: 32px;
+
       display: flex;
       align-items: center;
       justify-content: center;
 
       border-radius: 10px;
       color: #e7b8ff;
-      background: rgba(255,255,255,.09);
-      box-shadow: inset 0 1px 2px rgba(255,255,255,.18);
+      background: rgba(255, 255, 255, .07);
 
-      transition: transform .2s ease;
+      box-shadow: inset 0 1px 2px rgba(255, 255, 255, .15);
+
+      transition: transform .15s ease;
     }
 
     .link-button:hover .arrow {
@@ -216,7 +222,7 @@
     footer {
       text-align: center;
       margin-top: 24px;
-      color: rgba(255,255,255,.35);
+      color: rgba(255, 255, 255, .35);
       font-size: 12px;
     }
 
@@ -231,6 +237,18 @@
         padding: 0 16px;
       }
     }
+
+    @media (prefers-reduced-motion: reduce) {
+      body::before {
+        animation: none;
+      }
+
+      .link-button,
+      .link-button::before,
+      .arrow {
+        transition: none;
+      }
+    }
   </style>
 </head>
 
@@ -239,7 +257,10 @@
   <main class="container">
 
     <header>
-      <div class="logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEgAAABICAMAAABiM0N1AAABjFBMVEVHcEz8vgf9wQb/zQL5ow38vgb5qAz8uAf/zQH+ywL6qAz4ng/8vgb/0gD/0gD/0gD/zgH/zAL/0gD/zQH5pQ3/0gD3mBEAAAD5qgv5qgv/0gD3mxD3lxH9wgT5pg39xQT/0gAxKAD/0gAAAAD/0QD9xgT6swn////7uQf+wgX9wwT9vQb+wQX+xAT+yAP9wAX8vwb/zwBdTAD/zAL6rAv7sAn6rgr5qgz5qAz9uwf5pg39xwP4pA37tQj7tgj4og7+ywL4nw/8vAb3nQ//yQP1uRD3mxBZQwf3mBF7NRJzMhIMCQQsLCw9PT0FBQMWFRHMlhAQDguQkI+VcQnFxcX2lRLpsRP/zQKhoaFjY2NqLxM0JwTu7u739/eQTRP3vBDutA3/2Sj/1he0tLTY2Nh0dHS0eBlsUAgiHxqaXRH/++TR0dH/99HCjA7prQ1aWlqEhIR7e3tqamp8OhL/6IDbpQiGaArInQRMTEv/4VX/5WuCRRJIOAN5XQb/7Zn/8bDh4eH/65GIhHJtZlJtnVlfAAAAInRSTlMAAhw0mgsx4IikguUT45T1elbXw07o1PW9ZGR69O329c51pWhpIQAABTFJREFUWMOtmPlD4kYUgAMip8qhuJ57kGhAVEB0rUvXpluoXUggJCmHgOFQFFG872Pd9h/vJFwBByXU7wdlMo8vb94MkBkEgaFQmk26j1YjZpOAGa0fdSazUoF0i9KssxhtHTBadGZlNxZFn9aC2V7Gou17Na2+IautC6xDfS9qBkyDti4ZNA28MKphmwyGOyWlmBi0yWJwAlqpfq3RJhOjth/iGcJsssGG+p97bD3RblJo5eSD3dw2Xmpb6zQhpz5Y7mA/V7+xcaJlGcqar9wPHD/INeZOsgoGZK2fmwMcsH/TWE/NlWmSVd/87T7w3OZBannxgqk5MEwWnpt9/EZ48fNcbNcHpxjC5HL+KPhy+wc5j9Acqs5cn1W2KJ8T/oCaP9qEprWakhbrBU/+Uaj5uWjSit+Hlp5EwhoQeBSSswjfmWZPL5rzfbzGwXke85hBqXW95JO/PWiIbvMYplOAkXl6Iv+z6jnPCy0wtk9LvcJkcDzzT63xCXmH9koogeNMuNZ4h4j/wteFwnEYjTKFAgV9U/ikUDhCUTJRSOw1LpJP5UajJkJPcJwLoZFtHE/CRQUcP0ZRKoOnyebV41MUJgqLoiP4MERRWBA1M0IjEYlod3cXNCmGOd7Z2TlmmJOdnWtIRkkx4IRhGBBGtvXuAQnidvP3YquWNqhgAl7czllv8G434vEQ/19EeDxI3Es8pFJgdCTHFa4piuE4hqLI+rSi0ZRICEWTHJegqOsCx51SVLNSkVTqgYjHkXjcG4hlH0AZoqG9ciaTDIVOMxkuWo+7r8QAlXsx4DqdeSJD0UQmwzREl9lYIA5EXq+XIOKXVXl1+pM4Xm6INnwEYKZ9+E0RGycIIBFEXq+HDUVB8hEunU5Go6fpNLcXiYDRgatLQpTXtyEGUE/pbSoaSaTTTCQi3AtcZT2iAhHuR8RjNM2G0TBJksz2NkOS11yZA7fepekLMYC4oOldUDCSpArl8ilJ7pS3E1E0xNJ01isGVEWE3+enQ2Km1Vkj03gGfFhYv2+xGuDz+ZvDB7N2Kg4/dAXeSEhFgCuYKN7oltZRImoEIP46MZa9FNZ4MgkMkaNk8pJlrwh/kyuW3Q2jIdAD5p5MJv9lWTbb6EUW6/gcc7GU9FNBLzhm/ItNZhwLh2FJQCrrcPgavYgk0p/dk4quiMU2iFZRQHobxNdkkX/YaLJ04fe1QVwsSQIeeGkfMiOFD0iYm3nGnLSfb+lCPsy8CR+Q6YU3YRoZnnsL5ocRneNN0CEm1/wb4DYhI9MuKA6XHKZHEKXGDcFVOQzMu7vGpVGChwgnBBe9WaLtLqe75arbnnXCEZ7ZzGvfnuOs3G0GS4cVu8TizNKl0roTEv3NbhYetDRrEJyHm4C7UpG+qGRnZ7OVi8PiVnCzZIcFr2nEzanWDiNQDAaDwBU8u9sC3J0JjTN6DRa7Lj76IWpNB9NZsI3vxQA0VKOuPh6r1qEE6K3vLdwdBqCBdlVtY6PWfIXCx4pbZ3XL2VaxwsPjagkB9LNw1vksXSwJJQJFj/HrHcL0zU3NGDxiZWXWzgfAD22A5+1fVzp4xiTb7T7NygsIxo581rRstseXP/fI8njrVlS/utwTq/q2LXu/arUnVM+32apfekAF2/jr33+RyXt9P/RIY9zwqxy+GMY7Hf6ox36TwZj6hWOfScPvXWKYHHjxBEmtMvzRBQaV+tWzMbV+9M9XGNWruzmxUyhHVKNTf3VgalQ1ouzy1E+hAK5J1ahh6u8WpgyjqsmRDseH/wFxcGdrayqh1gAAAABJRU5ErkJggg==" alt="" /></div>
+      <div class="logo">
+        <img src="data:image/png;base64,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" alt="">
+      </div>
+
       <h1>JISD Links</h1>
       <p class="subtitle">Click any link.</p>
     </header>
