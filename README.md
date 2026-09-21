@@ -1,2 +1,2 @@
 # List of Unblocked Links!
-https://tinyurl.com/jisdlinks
+https://tinyurl.com/jisdlink
