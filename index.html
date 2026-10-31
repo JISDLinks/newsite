@@ -210,6 +210,10 @@
     var MAXLEN = 6;
     var FAKE_TITLE = "Clever | Portal";
     var CLEVER_URL = "https://clever.com";
+    var FAKE_ICON = "https://www.clever.com/wp-content/uploads/2023/06/cropped-Favicon-512px-192x192.png";
+    var BLOOKET_ICON = "https://www.blooket.com/favicon.ico";
+    // Transparent 1x1 image: browsers keep the old favicon if the link is just removed
+    var BLANK_ICON = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 
     var input = document.getElementById("code");
     var go = document.getElementById("go");
@@ -273,7 +277,9 @@
     function showLinksInPlace() {
       join.classList.add("hidden");
       links.classList.remove("hidden");
-      document.title = "JISD Links! :)";
+      document.title = "JISD Links! :D";
+      realTitle = document.title;
+      setIcon(null); // no favicon on the links screen
       window.scrollTo(0, 0);
     }
 
@@ -293,6 +299,7 @@
       var j = clone.querySelector("#join");
       if (j) j.remove();
       clone.querySelectorAll("script").forEach(function (s) { s.remove(); });
+      clone.querySelectorAll("link[rel~='icon']").forEach(function (l) { l.remove(); });
       clone.querySelector("#links").classList.remove("hidden");
       clone.querySelector("title").textContent = "JISD Links! :)";
 
@@ -303,11 +310,15 @@
         "document.title='" + FAKE_TITLE + "';" +
         "window.location.replace('" + CLEVER_URL + "');}},true);" +
         "var rt=document.title;" +
-        "function hideT(){if(document.title!=='" + FAKE_TITLE + "')rt=document.title;document.title='" + FAKE_TITLE + "';}" +
-        "function showT(){document.title=rt;}" +
+        "function setI(h){var l=document.querySelector('link[rel=icon]');" +
+        "if(h===null){var g=document.querySelector('.logo-box img');h=g?g.src:'" + BLANK_ICON + "';}" +
+        "if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}l.href=h;}" +
+        "function hideT(){if(document.title!=='" + FAKE_TITLE + "')rt=document.title;document.title='" + FAKE_TITLE + "';setI('" + FAKE_ICON + "');}" +
+        "function showT(){document.title=rt;setI(null);}" +
         "window.addEventListener('blur',hideT);" +
         "window.addEventListener('focus',showT);" +
         "document.addEventListener('visibilitychange',function(){if(document.hidden)hideT();else showT();});" +
+        "setI(null);" +
         "<\/script>";
 
       w.document.open();
@@ -344,18 +355,45 @@
 
     // When the tab/window is unfocused, swap the title to the fake one
     var realTitle = document.title;
+
+    // Focused icon: Blooket on the code screen, none on the links screen
+    function focusedIcon() {
+      return links.classList.contains("hidden") ? BLOOKET_ICON : null;
+    }
+
+    // Set the favicon, or pass null to remove it (back to the default)
+    function setIcon(href) {
+      var l = document.querySelector("link[rel~='icon']");
+      if (href === null) {
+        // links screen: use the logo from the .logo-box div
+        var logo = document.querySelector(".logo-box img");
+        href = logo ? logo.src : BLANK_ICON;
+      }
+      if (!l) {
+        l = document.createElement("link");
+        l.rel = "icon";
+        document.head.appendChild(l);
+      }
+      l.href = href;
+    }
+
     function hideTitle() {
       if (document.title !== FAKE_TITLE) realTitle = document.title;
       document.title = FAKE_TITLE;
+      setIcon(FAKE_ICON);
     }
     function showTitle() {
       document.title = realTitle;
+      setIcon(focusedIcon());
     }
     window.addEventListener("blur", hideTitle);
     window.addEventListener("focus", showTitle);
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) hideTitle(); else showTitle();
     });
+
+    // Code screen is showing on load, so use the Blooket favicon
+    setIcon(BLOOKET_ICON);
   })();
 </script>
 </body>
