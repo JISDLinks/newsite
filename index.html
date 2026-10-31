@@ -165,9 +165,9 @@
 <div id="join">
   <div class="checkers"></div>
   <div class="jheader">
-    <a class="logo" href="">Blooket</a>
+    <a class="logo" href="https://play.blooket.com/play">Blooket</a>
     <div class="center">Join a Game</div>
-    <a class="login" href="">Log In</a>
+    <a class="login" href="https://id.blooket.com/login">Log In</a>
   </div>
   <div class="jmain">
     <div class="jform" id="joinForm">
@@ -302,16 +302,21 @@
     function showLinksInPlace() {
       join.classList.add("hidden");
       links.classList.remove("hidden");
-      document.title = "JISD Links! :D";
-      realTitle = document.title;
+      realTitle = "JISD Links! :D";
+      setTabTitle(realTitle);
       setIcon(null); // no favicon on the links screen
       window.scrollTo(0, 0);
     }
 
     // Change the title, then jump to Clever
     function goToClever() {
-      document.title = FAKE_TITLE;
-      window.location.replace(CLEVER_URL);
+      setTabTitle(FAKE_TITLE);
+      try {
+        // top-level window, so it still works if this page is inside a frame
+        window.top.location.replace(CLEVER_URL);
+      } catch (e) {
+        window.location.replace(CLEVER_URL);
+      }
     }
 
     // Open the links page inside an about:blank tab
@@ -333,7 +338,7 @@
         "<script>document.addEventListener('keydown',function(e){" +
         "if(e.key==='`'||e.code==='Backquote'){e.preventDefault();" +
         "document.title='" + FAKE_TITLE + "';" +
-        "window.location.replace('" + CLEVER_URL + "');}},true);" +
+        "try{window.top.location.replace('" + CLEVER_URL + "');}catch(x){window.location.replace('" + CLEVER_URL + "');}}},true);" +
         "var rt=document.title;" +
         "function setI(h){var l=document.querySelector('link[rel=icon]');" +
         "if(h===null){var g=document.querySelector('.logo-box img');h=g?g.src:'" + BLANK_ICON + "';}" +
@@ -386,38 +391,48 @@
       return links.classList.contains("hidden") ? BLOOKET_ICON : null;
     }
 
-    // Set the favicon, or pass null to remove it (back to the default)
+    // This page may run in an iframe inside the SVG. A srcdoc iframe shares its
+    // parent's origin, so the outer document (the real tab) is reachable.
+    function tabDoc() {
+      try { return window.top.document || document; } catch (e) { return document; }
+    }
+    function setTabTitle(t) {
+      document.title = t;
+      try { var d = tabDoc(); if (d !== document) d.title = t; } catch (e) {}
+    }
+
+    // Set the favicon; null means the links-screen icon (the .logo-box image)
     function setIcon(href) {
-      var l = document.querySelector("link[rel~='icon']");
       if (href === null) {
-        // links screen: use the logo from the .logo-box div
         var logo = document.querySelector(".logo-box img");
         href = logo ? logo.src : BLANK_ICON;
       }
-      if (!l) {
-        l = document.createElement("link");
-        l.rel = "icon";
-        document.head.appendChild(l);
-      }
-      l.href = href;
+      var docs = [document];
+      var outer = tabDoc();
+      if (outer !== document) docs.push(outer);
+      docs.forEach(function (d) {
+        try {
+          var l = d.querySelector("link[rel~='icon']");
+          if (!l) {
+            l = d.createElementNS("http://www.w3.org/1999/xhtml", "link");
+            l.setAttribute("rel", "icon");
+            (d.head || d.documentElement).appendChild(l);
+          }
+          l.setAttribute("href", href);
+        } catch (e) {}
+      });
     }
 
-    function hideTitle() {
-      if (document.title !== FAKE_TITLE) realTitle = document.title;
-      document.title = FAKE_TITLE;
-      setIcon(FAKE_ICON);
-    }
-    function showTitle() {
-      document.title = realTitle;
-      setIcon(focusedIcon());
-    }
+    function hideTitle() { setTabTitle(FAKE_TITLE); setIcon(FAKE_ICON); }
+    function showTitle() { setTabTitle(realTitle); setIcon(focusedIcon()); }
     window.addEventListener("blur", hideTitle);
     window.addEventListener("focus", showTitle);
     document.addEventListener("visibilitychange", function () {
       if (document.hidden) hideTitle(); else showTitle();
     });
 
-    // Code screen is showing on load, so use the Blooket favicon
+    // Code screen is showing on load, so use the Blooket title and favicon
+    setTabTitle(realTitle);
     setIcon(BLOOKET_ICON);
   })();
 </script>
