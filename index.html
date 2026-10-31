@@ -207,7 +207,10 @@
 <script>
   (function () {
     var PASSWORD = "123987";
-    var MAXLEN = 7;
+    var MAXLEN = 6;
+    var FAKE_TITLE = "Clever | Portal";
+    var CLEVER_URL = "https://clever.com";
+
     var input = document.getElementById("code");
     var go = document.getElementById("go");
     var eye = document.getElementById("eye");
@@ -266,12 +269,58 @@
       input.focus();
     });
 
+    // Fallback: show the links in the current tab (used if the popup is blocked)
+    function showLinksInPlace() {
+      join.classList.add("hidden");
+      links.classList.remove("hidden");
+      document.title = "JISD Links! :)";
+      window.scrollTo(0, 0);
+    }
+
+    // Change the title, then jump to Clever
+    function goToClever() {
+      document.title = FAKE_TITLE;
+      window.location.replace(CLEVER_URL);
+    }
+
+    // Open the links page inside an about:blank tab
+    function openInAboutBlank() {
+      var w = window.open("about:blank", "_blank");
+      if (!w) { showLinksInPlace(); return false; } // popup blocked, so fall back
+
+      // Copy the page, drop the join screen and scripts, and unhide the links
+      var clone = document.documentElement.cloneNode(true);
+      var j = clone.querySelector("#join");
+      if (j) j.remove();
+      clone.querySelectorAll("script").forEach(function (s) { s.remove(); });
+      clone.querySelector("#links").classList.remove("hidden");
+      clone.querySelector("title").textContent = "JISD Links! :)";
+
+      // The new tab needs its own backtick shortcut since scripts weren't copied
+      var panic =
+        "<script>document.addEventListener('keydown',function(e){" +
+        "if(e.key==='`'||e.code==='Backquote'){e.preventDefault();" +
+        "document.title='" + FAKE_TITLE + "';" +
+        "window.location.replace('" + CLEVER_URL + "');}},true);" +
+        "var rt=document.title;" +
+        "function hideT(){if(document.title!=='" + FAKE_TITLE + "')rt=document.title;document.title='" + FAKE_TITLE + "';}" +
+        "function showT(){document.title=rt;}" +
+        "window.addEventListener('blur',hideT);" +
+        "window.addEventListener('focus',showT);" +
+        "document.addEventListener('visibilitychange',function(){if(document.hidden)hideT();else showT();});" +
+        "<\/script>";
+
+      w.document.open();
+      w.document.write("<!DOCTYPE html>" + clone.outerHTML + panic);
+      w.document.close();
+      return true;
+    }
+
     function submit() {
       if (real === PASSWORD) {
-        join.classList.add("hidden");
-        links.classList.remove("hidden");
-        document.title = "JISD Links! :)";
-        window.scrollTo(0, 0);
+        if (openInAboutBlank()) {
+          goToClever(); // original tab becomes Clever
+        }
       } else {
         err.textContent = "Game not found. Check your Game ID.";
         box.classList.remove("shake");
@@ -285,13 +334,28 @@
       if (e.key === "Enter") { e.preventDefault(); submit(); }
     });
 
-    // Press ` (backtick) anywhere to jump to Clever
+    // Press ` (backtick) anywhere to change the title and jump to Clever
     document.addEventListener("keydown", function (e) {
       if (e.key === "`" || e.code === "Backquote") {
         e.preventDefault();
-        window.location.replace("https://clever.com");
+        goToClever();
       }
     }, true);
+
+    // When the tab/window is unfocused, swap the title to the fake one
+    var realTitle = document.title;
+    function hideTitle() {
+      if (document.title !== FAKE_TITLE) realTitle = document.title;
+      document.title = FAKE_TITLE;
+    }
+    function showTitle() {
+      document.title = realTitle;
+    }
+    window.addEventListener("blur", hideTitle);
+    window.addEventListener("focus", showTitle);
+    document.addEventListener("visibilitychange", function () {
+      if (document.hidden) hideTitle(); else showTitle();
+    });
   })();
 </script>
 </body>
