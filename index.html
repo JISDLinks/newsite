@@ -322,11 +322,16 @@
 
     // Open a URL inside an about:blank tab (full-screen iframe).
     // Must be self-contained: it gets serialized into the about:blank copy too.
-    function openCloaked(url) {
+    function openCloaked(url, title) {
       var w = window.open("about:blank", "_blank");
       if (!w) { window.open(url, "_blank"); return; } // popup blocked, so fall back
       var d = w.document;
-      d.body.style.cssText = "margin:0;height:100vh;overflow:hidden;background:#000";
+      d.open();
+      // Fresh document with its own title, so nothing is inherited from this page
+      d.write("<!DOCTYPE html><html><head><meta charset='utf-8'><title></title></head>" +
+        "<body style='margin:0;height:100vh;overflow:hidden;background:#000'></body></html>");
+      d.close();
+      d.title = title || "";
       var f = d.createElement("iframe");
       f.src = url;
       f.style.cssText = "border:0;width:100%;height:100%";
@@ -339,7 +344,7 @@
       var a = e.target.closest && e.target.closest("a.link-button");
       if (!a) return;
       e.preventDefault();
-      openCloaked(a.href);
+      openCloaked(a.href, (a.querySelector(".name") || a).textContent.trim());
     });
 
     // Open the links page inside an about:blank tab
@@ -362,7 +367,7 @@
         "<script>var openCloaked=" + openCloaked.toString() + ";" +
         "document.addEventListener('click',function(e){" +
         "var a=e.target.closest&&e.target.closest('a.link-button');if(!a)return;" +
-        "e.preventDefault();openCloaked(a.href);});" +
+        "e.preventDefault();openCloaked(a.href,(a.querySelector('.name')||a).textContent.trim());});" +
         "document.addEventListener('keydown',function(e){" +
         "if(e.key==='`'||e.code==='Backquote'){e.preventDefault();" +
         "document.title='" + FAKE_TITLE + "';" +
