@@ -322,11 +322,10 @@
 
     // Open a URL inside an about:blank tab (full-screen iframe).
     // Must be self-contained: it gets serialized into the about:blank copy too.
-    function openCloaked(url, title) {
+    function openCloaked(url) {
       var w = window.open("about:blank", "_blank");
       if (!w) { window.open(url, "_blank"); return; } // popup blocked, so fall back
       var d = w.document;
-      d.title = title;
       d.body.style.cssText = "margin:0;height:100vh;overflow:hidden;background:#000";
       var f = d.createElement("iframe");
       f.src = url;
@@ -340,7 +339,7 @@
       var a = e.target.closest && e.target.closest("a.link-button");
       if (!a) return;
       e.preventDefault();
-      openCloaked(a.href, FAKE_TITLE);
+      openCloaked(a.href);
     });
 
     // Open the links page inside an about:blank tab
@@ -363,7 +362,7 @@
         "<script>var openCloaked=" + openCloaked.toString() + ";" +
         "document.addEventListener('click',function(e){" +
         "var a=e.target.closest&&e.target.closest('a.link-button');if(!a)return;" +
-        "e.preventDefault();openCloaked(a.href,'" + FAKE_TITLE + "');});" +
+        "e.preventDefault();openCloaked(a.href);});" +
         "document.addEventListener('keydown',function(e){" +
         "if(e.key==='`'||e.code==='Backquote'){e.preventDefault();" +
         "document.title='" + FAKE_TITLE + "';" +
