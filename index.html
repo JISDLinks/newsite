@@ -344,6 +344,7 @@
       var a = e.target.closest && e.target.closest("a.link-button");
       if (!a) return;
       e.preventDefault();
+      skipHide = true; // opening a link steals focus; don't swap this tab's title
       openCloaked(a.href, (a.querySelector(".name") || a).textContent.trim());
     });
 
@@ -367,17 +368,17 @@
         "<script>var openCloaked=" + openCloaked.toString() + ";" +
         "document.addEventListener('click',function(e){" +
         "var a=e.target.closest&&e.target.closest('a.link-button');if(!a)return;" +
-        "e.preventDefault();openCloaked(a.href,(a.querySelector('.name')||a).textContent.trim());});" +
+        "e.preventDefault();skipHide=true;openCloaked(a.href,(a.querySelector('.name')||a).textContent.trim());});" +
         "document.addEventListener('keydown',function(e){" +
         "if(e.key==='`'||e.code==='Backquote'){e.preventDefault();" +
         "document.title='" + FAKE_TITLE + "';" +
         "try{window.top.location.replace('" + CLEVER_URL + "');}catch(x){window.location.replace('" + CLEVER_URL + "');}}},true);" +
-        "var rt=document.title;" +
+        "var rt=document.title;var skipHide=false;" +
         "function setI(h){var l=document.querySelector('link[rel=icon]');" +
         "if(h===null){var g=document.querySelector('.logo-box img');h=g?g.src:'" + BLANK_ICON + "';}" +
         "if(!l){l=document.createElement('link');l.rel='icon';document.head.appendChild(l);}l.href=h;}" +
-        "function hideT(){if(document.title!=='" + FAKE_TITLE + "')rt=document.title;document.title='" + FAKE_TITLE + "';setI('" + FAKE_ICON + "');}" +
-        "function showT(){document.title=rt;setI(null);}" +
+        "function hideT(){if(skipHide)return;if(document.title!=='" + FAKE_TITLE + "')rt=document.title;document.title='" + FAKE_TITLE + "';setI('" + FAKE_ICON + "');}" +
+        "function showT(){skipHide=false;document.title=rt;setI(null);}" +
         "window.addEventListener('blur',hideT);" +
         "window.addEventListener('focus',showT);" +
         "document.addEventListener('visibilitychange',function(){if(document.hidden)hideT();else showT();});" +
@@ -456,8 +457,9 @@
       });
     }
 
-    function hideTitle() { setTabTitle(FAKE_TITLE); setIcon(FAKE_ICON); }
-    function showTitle() { setTabTitle(realTitle); setIcon(focusedIcon()); }
+    var skipHide = false;
+    function hideTitle() { if (skipHide) return; setTabTitle(FAKE_TITLE); setIcon(FAKE_ICON); }
+    function showTitle() { skipHide = false; setTabTitle(realTitle); setIcon(focusedIcon()); }
     window.addEventListener("blur", hideTitle);
     window.addEventListener("focus", showTitle);
     document.addEventListener("visibilitychange", function () {
