@@ -337,6 +337,12 @@
       f.style.cssText = "border:0;width:100%;height:100%";
       f.setAttribute("allow", "fullscreen; autoplay; clipboard-read; clipboard-write; gamepad; microphone; camera");
       d.body.appendChild(f);
+      // Lock the tab title so nothing can overwrite it afterwards
+      var t = title || "";
+      var lock = d.createElement("script");
+      lock.textContent = "var T=" + JSON.stringify(t) + ";" +
+        "setInterval(function(){if(document.title!==T)document.title=T;},250);";
+      d.body.appendChild(lock);
     }
 
     // Intercept every link button click
