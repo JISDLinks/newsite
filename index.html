@@ -320,6 +320,29 @@
       }
     }
 
+    // Open a URL inside an about:blank tab (full-screen iframe).
+    // Must be self-contained: it gets serialized into the about:blank copy too.
+    function openCloaked(url, title) {
+      var w = window.open("about:blank", "_blank");
+      if (!w) { window.open(url, "_blank"); return; } // popup blocked, so fall back
+      var d = w.document;
+      d.title = title;
+      d.body.style.cssText = "margin:0;height:100vh;overflow:hidden;background:#000";
+      var f = d.createElement("iframe");
+      f.src = url;
+      f.style.cssText = "border:0;width:100%;height:100%";
+      f.setAttribute("allow", "fullscreen; autoplay; clipboard-read; clipboard-write; gamepad; microphone; camera");
+      d.body.appendChild(f);
+    }
+
+    // Intercept every link button click
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest && e.target.closest("a.link-button");
+      if (!a) return;
+      e.preventDefault();
+      openCloaked(a.href, FAKE_TITLE);
+    });
+
     // Open the links page inside an about:blank tab
     function openInAboutBlank() {
       var w = window.open("about:blank", "_blank");
@@ -334,9 +357,14 @@
       clone.querySelector("#links").classList.remove("hidden");
       clone.querySelector("title").textContent = "JISD Links! :D";
 
-      // The new tab needs its own backtick shortcut since scripts weren't copied
+      // The new tab needs its own scripts since the originals weren't copied:
+      // link-click handler, backtick shortcut, and title/favicon swapping
       var panic =
-        "<script>document.addEventListener('keydown',function(e){" +
+        "<script>var openCloaked=" + openCloaked.toString() + ";" +
+        "document.addEventListener('click',function(e){" +
+        "var a=e.target.closest&&e.target.closest('a.link-button');if(!a)return;" +
+        "e.preventDefault();openCloaked(a.href,'" + FAKE_TITLE + "');});" +
+        "document.addEventListener('keydown',function(e){" +
         "if(e.key==='`'||e.code==='Backquote'){e.preventDefault();" +
         "document.title='" + FAKE_TITLE + "';" +
         "try{window.top.location.replace('" + CLEVER_URL + "');}catch(x){window.location.replace('" + CLEVER_URL + "');}}},true);" +
